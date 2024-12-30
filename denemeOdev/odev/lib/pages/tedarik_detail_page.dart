@@ -192,8 +192,7 @@ class _TedarikDetailPageState extends State<TedarikDetailPage> {
             TextButton(
               onPressed: () async {
                 // Tedarik güncelle
-                await _updateTedarik(
-                );
+                await _updateTedarik( titleCtrl.text, descCtrl.text, priceCtrl.text, sectorCtrl.text);
                 Navigator.pop(ctx); // Dialog kapat
               },
               child: Text('Kaydet'),
@@ -217,7 +216,7 @@ class _TedarikDetailPageState extends State<TedarikDetailPage> {
   }
 
   /// 3. Firestore'da tedarik kaydını güncelle
-  Future<void> _updateTedarik() async {
+  Future<void> _updateTedarik(title, description, price, sector) async {
     final docRef =
         FirebaseFirestore.instance.collection('supplies').doc(widget.docId);
     try {

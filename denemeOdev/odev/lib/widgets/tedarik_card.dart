@@ -159,7 +159,7 @@ class _TedarikCardState extends State<TedarikCard> {
             // Tedarik ismi (buton rengiyle aynı arkaplanda ve ortada)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               decoration: BoxDecoration(
                 color: AppTheme.secondaryContainerColor,
               ),
@@ -174,6 +174,7 @@ class _TedarikCardState extends State<TedarikCard> {
                   color: Colors.white,
                 ),
               ),
+              
             ),
 
             // Açıklama (sola yaslı)

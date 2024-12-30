@@ -86,36 +86,46 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 70,
-        title: Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                getPageTitle(_selectedIndex),
-                style: const TextStyle(color: Colors.white, fontSize: 18),
-                overflow: TextOverflow.ellipsis,
-              ),
+  toolbarHeight: 70,
+  title: LayoutBuilder(
+    builder: (context, constraints) {
+      final screenWidth = constraints.maxWidth; // AppBar'ın genişliğini al
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          // Metni sola hizala
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              getPageTitle(_selectedIndex),
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+              overflow: TextOverflow.ellipsis,
             ),
-            Align(
-              alignment: Alignment.center,
-              child: Image.asset(
-                'assets/images/logo.png',
-                height: 70,
-              ),
+          ),
+          // Logoyu merkezden 48 piksel sağa kaydır
+          Align(
+            alignment: Alignment(
+              (30.0 / (screenWidth / 2)), // X ekseninde 48 piksel kaydırma
+              0.0, // Y ekseninde kaydırma yok
             ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-            },
+            child: Image.asset(
+              'assets/images/logo.png',
+              height: 60,
+            ),
           ),
         ],
-      ),
+      );
+    },
+  ),
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.logout),
+      onPressed: () async {
+        await FirebaseAuth.instance.signOut();
+      },
+    ),
+  ],
+),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
