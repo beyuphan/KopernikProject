@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // Sayfalar
 import 'pages/home_page.dart';
@@ -12,11 +14,15 @@ import 'pages/profile_page.dart';
 // Tema
 import 'theme/theme.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await setupLocalNotifications();
   runApp(MyApp());
 }
 
@@ -83,50 +89,107 @@ class _MainPageState extends State<MainPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    setupFirebaseMessaging();
+  }
+
+  Future<void> setupFirebaseMessaging() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('Kullanıcı bildirimlere izin verdi.');
+    } else {
+      print('Kullanıcı bildirimlere izin vermedi.');
+    }
+
+    String? token = await messaging.getToken();
+    print('FCM Token: $token');
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Ön planda bildirim alındı: ${message.notification?.title}');
+      showNotification(
+        message.notification?.title ?? 'Bildirim',
+        message.notification?.body ?? 'Yeni bildirim',
+      );
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Arka planda bildirim tıklandı: ${message.notification?.title}');
+    });
+
+    RemoteMessage? initialMessage = await messaging.getInitialMessage();
+    if (initialMessage != null) {
+      print(
+          'Uygulama kapalıyken gelen bildirim: ${initialMessage.notification?.title}');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-  toolbarHeight: 70,
-  title: LayoutBuilder(
-    builder: (context, constraints) {
-      final screenWidth = constraints.maxWidth; // AppBar'ın genişliğini al
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          // Metni sola hizala
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              getPageTitle(_selectedIndex),
-              style: const TextStyle(color: AppTheme.secondaryColor, fontSize: 21, fontWeight: FontWeight.bold),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          // Logoyu merkezden 48 piksel sağa kaydır
-          Align(
-            alignment: Alignment(
-              (30.0 / (screenWidth / 2)), // X ekseninde 48 piksel kaydırma
-              0.0, // Y ekseninde kaydırma yok
-            ),
-            child: Image.asset(
-              'assets/images/logo.png',
-              height: 60,
-            ),
+        toolbarHeight: 70,
+        title: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    getPageTitle(_selectedIndex),
+                    style: const TextStyle(
+                        color: AppTheme.secondaryColor,
+                        fontSize: 21,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment(
+                    (30.0 / (screenWidth / 2)),
+                    0.0,
+                  ),
+                  child:
+                  InkWell(
+                    onTap: () {
+                      Navigator.popAndPushNamed(context, "/");
+                    }, // Image tapped
+                    borderRadius: BorderRadius.circular(30),
+                    splashColor: Colors.white10, // Splash color over image
+                    child: Ink.image(
+                      fit: BoxFit.cover, // Fixes border issues
+                      width: 60,
+                      height: 60,
+                      image: AssetImage(
+                          'assets/images/logo.png',
+                      ),
+                    ),
+                  )
+                ),
+              ],
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout,
+                color: AppTheme.secondaryColor, size: 28),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
           ),
         ],
-      );
-    },
-  ),
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.logout, color: AppTheme.secondaryColor, size: 28),
-      onPressed: () async {
-        await FirebaseAuth.instance.signOut();
-      },
-    ),
-  ],
-),
+      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -152,4 +215,38 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+}
+
+Future<void> setupLocalNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('notification');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
+
+Future<void> showNotification(String title, String body) async {
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    'high_importance_channel', // channelId
+    'High Importance Notifications', // channelName
+    channelDescription:
+        'This channel is used for important notifications.', // channelDescription
+    importance: Importance.max,
+    priority: Priority.high,
+        largeIcon: DrawableResourceAndroidBitmap('notification'),
+  );
+
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    title,
+    body,
+    platformChannelSpecifics,
+  );
 }

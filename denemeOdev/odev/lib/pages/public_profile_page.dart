@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:odev/theme/theme.dart';
 import 'tedarik_detail_page.dart';
 import '../widgets/tedarik_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -89,7 +90,8 @@ class _PublicProfilePageState extends State<PublicProfilePage> {
     return Scaffold(
       // AppBar'da kullanıcı adını göstermek istersek:
       appBar: AppBar(
-        title: Text(_userName.isNotEmpty ? _userName : 'Kullanıcı Profili'),
+        title: Text(_userName.isNotEmpty ? _userName : 'Kullanıcı Profili', style: TextStyle(color: AppTheme.secondaryColor),),
+        iconTheme: IconThemeData(color: AppTheme.secondaryColor),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

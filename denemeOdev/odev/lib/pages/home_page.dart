@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 0.60,
+                  childAspectRatio: 0.5,
                 ),
                 itemCount: filteredItems.length,
                 itemBuilder: (context, index) {
@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.primaryColor,
+                  color: AppTheme.secondaryColor,
                 ),
               ),
               content: SingleChildScrollView(
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                           });
                         }
                       },
-                      backgroundColor: AppTheme.primaryColor,
+                      backgroundColor: AppTheme.secondaryColor,
                       textColor: Colors.white,
                     ),
                     if (selectedImage != null) ...[
@@ -287,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                     );
                     Navigator.of(context).pop();
                   },
-                  backgroundColor: AppTheme.primaryColor,
+                  backgroundColor: AppTheme.secondaryColor,
                   textColor: Colors.white,
                 ),
               ],

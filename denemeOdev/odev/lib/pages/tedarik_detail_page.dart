@@ -411,7 +411,7 @@ Widget build(BuildContext context) {
                   top: 40,
                   left: 16,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Icons.arrow_back, color: AppTheme.secondaryColor),
                     onPressed: () {
                       Navigator.pop(context);
                     },

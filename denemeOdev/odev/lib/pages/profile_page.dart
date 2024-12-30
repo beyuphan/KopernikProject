@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:odev/theme/theme.dart';
 import 'dart:convert'; // JSON parse için
 import 'public_profile_page.dart';
 import 'tedarik_detail_page.dart';
@@ -242,7 +243,7 @@ class _ProfilesPageState extends State<ProfilesPage> {
                           Spacer(),
                           // Ayarlar butonu
                           IconButton(
-                            icon: Icon(Icons.settings),
+                            icon: Icon(Icons.settings, color: AppTheme.secondaryColor,),
                             onPressed: () {
                               // Ayar / Profili Düzenle Dialog’u
                               showDialog(
@@ -272,14 +273,14 @@ class _ProfilesPageState extends State<ProfilesPage> {
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.of(context).pop(),
-                                        child: Text('İptal'),
+                                        child: Text('İptal', style: TextStyle(color: Colors.black),),
                                       ),
                                       TextButton(
                                         onPressed: () async {
                                           await _updateUserProfile();
                                           Navigator.of(context).pop(); 
                                         },
-                                        child: Text('Güncelle'),
+                                        child: Text('Güncelle', style: TextStyle(color: AppTheme.secondaryColor),),
                                       ),
                                     ],
                                   );
