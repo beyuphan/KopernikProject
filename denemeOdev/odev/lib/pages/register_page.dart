@@ -73,7 +73,9 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Kopernik Pizza"),
+        title: Text("Kopernik Pizza",style: TextStyle(color: Color(0xff0e7f3f)),),
+        iconTheme: IconThemeData(color: Color(0xff0e7f3f)),
+
       ),
       body: SingleChildScrollView( // Klavye açıldığında taşmayı önlemek için
         padding: EdgeInsets.all(16.0),
@@ -81,31 +83,35 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
 
             Center(
-              child: Image.asset(
-                'assets/images/logo.png', // Logo resminizin yolunu belirtin
-                height: 200, // Logo yüksekliğini ayarlayın
-                width: 200, // Logo genişliğini ayarlayın
-              ),
+              child:
+             Image.asset(
+              'assets/images/logo.png', // Logo resminizin yolunu belirtin
+              height: 210, // Logo yüksekliğini ayarlayın
+              width: 210, // Logo genişliğini ayarlayın
+
+            ),
+
+
             ),
             SizedBox(height: 40),
 
             CustomTextField(
               controller: _nameController,
-              labelText: 'Full Name',
+              labelText: 'Kullanıcı Adı',
               keyboardType: TextInputType.name,
               onChanged: (value) {},
             ),
             SizedBox(height: 20),
             CustomTextField(
               controller: _emailController,
-              labelText: 'Email',
+              labelText: 'E-Posta',
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {},
             ),
             SizedBox(height: 20),
             CustomTextField(
               controller: _passwordController,
-              labelText: 'Password',
+              labelText: 'Parola',
               keyboardType: TextInputType.text,
               obscureText: true,
               onChanged: (value) {},
@@ -122,14 +128,14 @@ class _RegisterPageState extends State<RegisterPage> {
             _isLoading
                 ? CircularProgressIndicator()
                 : CustomButton(
-                    text: 'Register',
+                    text: 'Kayıt Ol',
                     onPressed: registerUser,
-                    backgroundColor: AppTheme.primaryColor, // İstediğiniz renk
+                    backgroundColor: Color(0xff0e7f3f), // İstediğiniz renk
                     textColor: Colors.white, // İstediğiniz metin rengi
                   ),
             SizedBox(height: 20),
             CustomButton(
-              text: 'Already have an account? Login',
+              text: 'Zaten hesabınız mı var? Giriş yapın',
               onPressed: () {
                 Navigator.push(
                   context,

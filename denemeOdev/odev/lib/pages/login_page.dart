@@ -66,7 +66,8 @@ Future<void> loginUser() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Kopernik Pizza"),
+        title: Text("Kopernik Pizza",style: TextStyle(color: Color(0xff0e7f3f)),),
+        iconTheme: IconThemeData(color: Color(0xff0e7f3f)),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -83,14 +84,14 @@ Future<void> loginUser() async {
             SizedBox(height: 40),
             CustomTextField(
               controller: _emailController,
-              labelText: 'Email',
+              labelText: 'E-Posta',
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {},
             ),
             SizedBox(height: 20),
             CustomTextField(
               controller: _passwordController,
-              labelText: 'Password',
+              labelText: 'Parola',
               keyboardType: TextInputType.text,
               obscureText: true, // Şifre alanını gizlemek için
               onChanged: (value) {},
@@ -103,14 +104,14 @@ Future<void> loginUser() async {
               ),
             SizedBox(height: 20),
             CustomButton(
-              text: 'Login',
+              text: 'Giriş Yap',
               onPressed: loginUser,
-              backgroundColor: AppTheme.primaryColor, // İstediğiniz renk
+              backgroundColor: Color(0xff0e7f3f), // İstediğiniz renk
               textColor: Colors.white, // İstediğiniz metin rengi
             ),
             SizedBox(height: 20),
             CustomButton(
-              text: 'Register',
+              text: 'Kayıt Ol',
               onPressed: () {
                 Navigator.push(
                   context,

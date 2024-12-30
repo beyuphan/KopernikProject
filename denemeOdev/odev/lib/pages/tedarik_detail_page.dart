@@ -238,15 +238,19 @@ class _TedarikDetailPageState extends State<TedarikDetailPage> {
 
       // Firestore’u güncelle
       await docRef.update({
-        'title': _title,
-        'description': _description,
-        'price': _price,
-        'sector': _sector,
+        'title': title,
+        'description': description,
+        'price': price,
+        'sector': sector,
         'file_url': newImageUrl,
       });
 
       // State’i güncelleyerek ekranda yansıtmalarını sağla
       setState(() {
+        _title = title;
+        _description = description;
+        _price = price;
+        _sector = sector;
         _imageUrl = newImageUrl ?? '';
         _newImageFile = null; // Yeni resim dosyasını temizle
       });

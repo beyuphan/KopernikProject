@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Renk Paleti
-  static const Color primaryColor = Color(0xFF2196F3); // Derin Lacivert
+  static const Color primaryColor = Color(0xFFF5F5F5); // Derin Lacivert
   static const Color primaryContainerColor = Color(0xFF334155); // Daha koyu bir lacivert varyant
   static const Color secondaryColor = Color(0xFFFF5722); // Canlı Turuncu
   static const Color secondaryContainerColor = Color(0xFF42A5F5); // Daha koyu turuncu varyant

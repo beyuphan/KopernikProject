@@ -85,6 +85,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
   toolbarHeight: 70,
   title: LayoutBuilder(
@@ -98,7 +99,7 @@ class _MainPageState extends State<MainPage> {
             alignment: Alignment.centerLeft,
             child: Text(
               getPageTitle(_selectedIndex),
-              style: const TextStyle(color: Colors.white, fontSize: 18),
+              style: const TextStyle(color: AppTheme.secondaryColor, fontSize: 21, fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -119,7 +120,7 @@ class _MainPageState extends State<MainPage> {
   ),
   actions: [
     IconButton(
-      icon: const Icon(Icons.logout),
+      icon: const Icon(Icons.logout, color: AppTheme.secondaryColor, size: 28),
       onPressed: () async {
         await FirebaseAuth.instance.signOut();
       },

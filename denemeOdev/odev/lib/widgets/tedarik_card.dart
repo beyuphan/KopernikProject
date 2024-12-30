@@ -161,7 +161,7 @@ class _TedarikCardState extends State<TedarikCard> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               decoration: BoxDecoration(
-                color: AppTheme.secondaryContainerColor,
+                color: Color(0xfff6efee),
               ),
               alignment: Alignment.center,
               child: Text(
@@ -171,10 +171,9 @@ class _TedarikCardState extends State<TedarikCard> {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: Color(0xFF000000),
                 ),
               ),
-              
             ),
 
             // Açıklama (sola yaslı)
@@ -192,27 +191,34 @@ class _TedarikCardState extends State<TedarikCard> {
             Spacer(),
             // Sektör ve fiyat (solda sektör, sağda fiyat)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.only(left: 8, right: 6),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const Icon(
+                    Icons.style,
+                    size: 14,
+                    color: Colors.black54,
+                  ),
                   // Sektör
                   Text(
                     widget.sector,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.black54,
                     ),
                   ),
+                  Spacer(),
                   // Fiyat
                   Text(
                     widget.price + " TL",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 21,
+                      fontSize: 20,
                       color: AppTheme.price,
                       fontWeight: FontWeight.w700,
                     ),
@@ -235,7 +241,9 @@ class _TedarikCardState extends State<TedarikCard> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: hasApplied ? AppTheme.textLightColor : AppTheme.secondaryColor,
+                    color: hasApplied
+                        ? AppTheme.textLightColor
+                        : AppTheme.secondaryColor,
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(16),
                       bottomRight: Radius.circular(16),
@@ -243,9 +251,7 @@ class _TedarikCardState extends State<TedarikCard> {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    hasApplied
-                        ? 'Başvuru Yapıldı'
-                        : 'Başvur',
+                    hasApplied ? 'Başvuru Yapıldı' : 'Başvur',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
