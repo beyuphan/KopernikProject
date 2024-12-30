@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:lottie/lottie.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 // Sayfalar
 import 'pages/home_page.dart';
@@ -15,7 +19,7 @@ import 'pages/profile_page.dart';
 import 'theme/theme.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +36,63 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kopernik Pizza',
       theme: AppTheme.theme,
-      home: AuthCheck(),
+      home: SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    playSound();
+    navigateToAuthCheck();
+  }
+
+  void playSound() async {
+    // Ses dosyasını çal
+    await audioPlayer.play(AssetSource('sounds/splash_sound.mp3'));
+
+    // Sesin bitmesini beklemek için bir Completer kullan
+    var completer = Completer<void>();
+
+    // Ses bittiğinde Completer'ı tamamla
+    audioPlayer.onPlayerComplete.listen((event) {
+      completer.complete();
+    });
+
+    // Ses bitene kadar bekle
+    await completer.future;
+  }
+
+  void navigateToAuthCheck() async {
+    await Future.delayed(Duration(seconds: 5)); // Splash ekranının gösterileceği süre
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => AuthCheck()),
+    );
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Lottie.asset('assets/animations/splash_animation.json',
+        ),
+      ),
     );
   }
 }
@@ -114,6 +174,8 @@ class _MainPageState extends State<MainPage> {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Ön planda bildirim alındı: ${message.notification?.title}');
+
+      // Bildirimi manuel olarak göster
       showNotification(
         message.notification?.title ?? 'Bildirim',
         message.notification?.body ?? 'Yeni bildirim',
@@ -159,10 +221,13 @@ class _MainPageState extends State<MainPage> {
                     (30.0 / (screenWidth / 2)),
                     0.0,
                   ),
-                  child:
-                  InkWell(
+                  child: InkWell(
                     onTap: () {
-                      Navigator.popAndPushNamed(context, "/");
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => AuthCheck()),
+                      );
                     }, // Image tapped
                     borderRadius: BorderRadius.circular(30),
                     splashColor: Colors.white10, // Splash color over image
@@ -171,10 +236,10 @@ class _MainPageState extends State<MainPage> {
                       width: 60,
                       height: 60,
                       image: AssetImage(
-                          'assets/images/logo.png',
+                        'assets/images/logo.png',
                       ),
                     ),
-                  )
+                  ),
                 ),
               ],
             );
@@ -219,7 +284,7 @@ class _MainPageState extends State<MainPage> {
 
 Future<void> setupLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('notification');
+  AndroidInitializationSettings('notification');
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
@@ -230,18 +295,20 @@ Future<void> setupLocalNotifications() async {
 
 Future<void> showNotification(String title, String body) async {
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
+  AndroidNotificationDetails(
     'high_importance_channel', // channelId
     'High Importance Notifications', // channelName
     channelDescription:
-        'This channel is used for important notifications.', // channelDescription
+    'This channel is used for important notifications.', // channelDescription
     importance: Importance.max,
     priority: Priority.high,
-        largeIcon: DrawableResourceAndroidBitmap('notification'),
+    icon: "@mipmap/ic_launcher",
+    playSound: true,
+    sound: RawResourceAndroidNotificationSound("notification_sound"), // Ses dosyası adı (uzantı olmadan)
   );
 
   const NotificationDetails platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
+  NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
     0,
