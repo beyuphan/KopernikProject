@@ -302,6 +302,7 @@ Future<void> showNotification(String title, String body) async {
     'This channel is used for important notifications.', // channelDescription
     importance: Importance.max,
     priority: Priority.high,
+    largeIcon: DrawableResourceAndroidBitmap("notification"),
     icon: "@mipmap/ic_launcher",
     playSound: true,
     sound: RawResourceAndroidNotificationSound("notification_sound"), // Ses dosyası adı (uzantı olmadan)
